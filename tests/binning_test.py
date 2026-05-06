@@ -86,49 +86,60 @@ class binning_tests(unittest.TestCase):
         self.assertFalse(_is_datetime_array(arr))
 
     def test_bins_number_default(self):
-        ds = binned_statistics(self.coords_1d)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(self.coords_1d)
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_0"]), DEFAULT_BINS_NUMBER)
 
-        ds = binned_statistics(self.coords_2d)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(self.coords_2d)
         for v in ds.sizes.values():
             self.assertEqual(v, DEFAULT_BINS_NUMBER)
 
-        ds = binned_statistics(self.coords_3d, bins=5)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(self.coords_3d, bins=5)
         for v in ds.sizes.values():
             self.assertEqual(v, 5)
 
-        ds = binned_statistics(self.coords_2d, bins=(5, None))
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(self.coords_2d, bins=(5, None))
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_0"]), 5)
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_1"]), DEFAULT_BINS_NUMBER)
 
     def test_bins_list(self):
-        ds = binned_statistics(self.coords_1d, bins=[[0, 1, 2, 3]])
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(self.coords_1d, bins=[[0, 1, 2, 3]])
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_0"]), 3)
 
-        ds = binned_statistics(self.coords_1d, bins=[np.arange(0, 4, 1)])
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(self.coords_1d, bins=[np.arange(0, 4, 1)])
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_0"]), 3)
 
-        ds = binned_statistics(self.coords_1d, bins=[np.arange(0, 4, 0.5)])
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(self.coords_1d, bins=[np.arange(0, 4, 0.5)])
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_0"]), 7)
 
     def test_1d_hist_number(self):
-        ds = binned_statistics(self.coords_1d, bins=3)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(self.coords_1d, bins=3)
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_0"]), 3)
 
     def test_2d_hist_number(self):
-        ds = binned_statistics(self.coords_2d, bins=(3, 4))
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(self.coords_2d, bins=(3, 4))
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_0"]), 3)
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_1"]), 4)
 
     def test_3d_hist_number(self):
-        ds = binned_statistics(self.coords_3d, bins=(3, 4, 5))
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(self.coords_3d, bins=(3, 4, 5))
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_0"]), 3)
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_1"]), 4)
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_2"]), 5)
 
     def test_hist_center(self):
         for i in range(1, 10):
-            ds = binned_statistics(self.coords_1d, bins=i)
+            with self.assertWarns(UserWarning):
+                ds = binned_statistics(self.coords_1d, bins=i)
 
             bins_coords = np.linspace(np.min(self.coords_1d), np.max(self.coords_1d), i + 1)
             bins_center = (bins_coords[:-1] + bins_coords[1:]) / 2
@@ -138,13 +149,15 @@ class binning_tests(unittest.TestCase):
             )
 
     def test_1d_output(self):
-        ds = binned_statistics(coords=self.coords_1d)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(coords=self.coords_1d)
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_0"]), DEFAULT_BINS_NUMBER)
         self.assertEqual(sum(ds[f"{DEFAULT_DATA_NAME}_count"].values), len(self.coords_1d))
 
     def test_1d_output_bins(self):
         n_bins = 3
-        ds = binned_statistics(coords=self.coords_1d, bins=n_bins)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(coords=self.coords_1d, bins=n_bins)
         self.assertEqual(len(ds[f"{DEFAULT_COORD_NAME}_0"]), n_bins)
         self.assertEqual(sum(ds[f"{DEFAULT_DATA_NAME}_count"].values), len(self.coords_1d))
         self.assertEqual(len(ds[f"{DEFAULT_DATA_NAME}_count"].shape), 1)
@@ -176,37 +189,43 @@ class binning_tests(unittest.TestCase):
         self.assertTrue(all(ds[f"{DEFAULT_DATA_NAME}_0_mean"].values[~mask] == value_2))
 
     def test_2d_output(self):
-        ds = binned_statistics(coords=self.coords_2d)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(coords=self.coords_2d)
         for v in ds.sizes.values():
             self.assertEqual(v, DEFAULT_BINS_NUMBER)
         self.assertEqual(len(ds[f"{DEFAULT_DATA_NAME}_count"].shape), 2)
 
         n_bins = (3, 4)
-        ds = binned_statistics(coords=self.coords_2d, bins=n_bins)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(coords=self.coords_2d, bins=n_bins)
         for i, v in enumerate(ds.sizes.values()):
             self.assertEqual(v, n_bins[i])
         self.assertEqual(len(ds[f"{DEFAULT_DATA_NAME}_count"].shape), 2)
 
         n_bins = (3, None)
-        ds = binned_statistics(coords=self.coords_2d, bins=n_bins)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(coords=self.coords_2d, bins=n_bins)
         for i, v in enumerate(ds.sizes.values()):
             self.assertEqual(v, n_bins[i] if n_bins[i] is not None else DEFAULT_BINS_NUMBER)
         self.assertEqual(len(ds[f"{DEFAULT_DATA_NAME}_count"].shape), 2)
 
     def test_3d_output(self):
-        ds = binned_statistics(coords=self.coords_3d)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(coords=self.coords_3d)
         for v in ds.sizes.values():
             self.assertEqual(v, DEFAULT_BINS_NUMBER)
         self.assertEqual(len(ds[f"{DEFAULT_DATA_NAME}_count"].shape), 3)
 
         n_bins = (3, 4, 5)
-        ds = binned_statistics(coords=self.coords_3d, bins=n_bins)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(coords=self.coords_3d, bins=n_bins)
         for i, v in enumerate(ds.sizes.values()):
             self.assertEqual(v, n_bins[i])
         self.assertEqual(len(ds[f"{DEFAULT_DATA_NAME}_count"].shape), 3)
 
         n_bins = (3, 4, None)
-        ds = binned_statistics(coords=self.coords_3d, bins=n_bins)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(coords=self.coords_3d, bins=n_bins)
         for i, v in enumerate(ds.sizes.values()):
             self.assertEqual(v, n_bins[i] if n_bins[i] is not None else DEFAULT_BINS_NUMBER)
         self.assertEqual(len(ds[f"{DEFAULT_DATA_NAME}_count"].shape), 3)
@@ -239,7 +258,8 @@ class binning_tests(unittest.TestCase):
         )
 
     def test_hist_range(self):
-        ds = binned_statistics(coords=self.coords_1d, bins=3, bins_range=self.bins_range_1d)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(coords=self.coords_1d, bins=3, bins_range=self.bins_range_1d)
         self.assertEqual(
             sum(ds[f"{DEFAULT_DATA_NAME}_count"].values),
             len(
@@ -253,7 +273,10 @@ class binning_tests(unittest.TestCase):
         )
 
     def test_hist_range_2d(self):
-        ds = binned_statistics(coords=self.coords_2d, bins=(3, 3), bins_range=self.bins_range_2d)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(
+                coords=self.coords_2d, bins=(3, 3), bins_range=self.bins_range_2d
+            )
         self.assertEqual(
             sum(ds[f"{DEFAULT_DATA_NAME}_count"].values.flatten()),
             len(
@@ -267,7 +290,10 @@ class binning_tests(unittest.TestCase):
         )
 
     def test_hist_range_3d(self):
-        ds = binned_statistics(coords=self.coords_3d, bins=(3, 3, 3), bins_range=self.bins_range_3d)
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(
+                coords=self.coords_3d, bins=(3, 3, 3), bins_range=self.bins_range_3d
+            )
         self.assertEqual(
             sum(ds[f"{DEFAULT_DATA_NAME}_count"].values.flatten()),
             len(
@@ -281,18 +307,20 @@ class binning_tests(unittest.TestCase):
         )
 
     def test_rename_dimensions(self):
-        ds = binned_statistics(
-            coords=self.coords_1d,
-            bins=4,
-            dim_names=["x"],
-        )
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(
+                coords=self.coords_1d,
+                bins=4,
+                dim_names=["x"],
+            )
         self.assertIn("x", ds.sizes)
 
-        ds = binned_statistics(
-            coords=self.coords_2d,
-            bins=(3, 4),
-            dim_names=["x", "y"],
-        )
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(
+                coords=self.coords_2d,
+                bins=(3, 4),
+                dim_names=["x", "y"],
+            )
         self.assertIn("x", ds.sizes)
         self.assertIn("y", ds.sizes)
 
@@ -326,11 +354,12 @@ class binning_tests(unittest.TestCase):
             )
 
     def test_rename_variables(self):
-        ds = binned_statistics(
-            coords=self.coords_1d,
-            bins=4,
-            output_names=["x"],
-        )
+        with self.assertWarns(UserWarning):
+            ds = binned_statistics(
+                coords=self.coords_1d,
+                bins=4,
+                output_names=["x"],
+            )
         self.assertIn("x_count", ds.data_vars)
 
         ds = binned_statistics(
