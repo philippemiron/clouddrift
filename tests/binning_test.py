@@ -39,7 +39,7 @@ class binning_tests(unittest.TestCase):
                     self.values_3d_ex.append(int(x > 0) + int(y > 0) + int(z > 0))
 
     def test_parameters_dimensions(self):
-        with self.assertRaises(ValueError):
+        with self.assertWarns(UserWarning), self.assertRaises(ValueError):
             binned_statistics(self.coords_1d, dim_names=["x", "y"])
 
         with self.assertRaises(ValueError):
@@ -48,10 +48,10 @@ class binning_tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             binned_statistics(self.coords_2d, bins=[10])
 
-        with self.assertRaises(ValueError):
+        with self.assertWarns(UserWarning), self.assertRaises(ValueError):
             binned_statistics(self.coords_2d, dim_names=["x"])
 
-        with self.assertRaises(ValueError):
+        with self.assertWarns(UserWarning), self.assertRaises(ValueError):
             binned_statistics(self.coords_1d, output_names=["x", "y"])
 
         with self.assertRaises(ValueError):

@@ -374,6 +374,8 @@ def ragged_to_regular(
     --------
     :func:`regular_to_ragged`
     """
+    ragged = np.asarray(ragged)
+    rowsize = np.asarray(rowsize)
     res = fill_value * np.ones((len(rowsize), int(max(rowsize))), dtype=ragged.dtype)
     unpacked = unpack(ragged, rowsize)
     for n in range(len(rowsize)):
