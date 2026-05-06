@@ -11,9 +11,9 @@ authors = [
 description = "Accelerating the use of Lagrangian data for atmospheric, oceanic, and climate sciences"
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
@@ -67,17 +67,17 @@ target-version = "py314"
 ignore = ["E731", "E741"]
 select = ["E4", "E7", "E9", "F", "I"]
 
+[tool.pytest.ini_options]
+testpaths = [
+  "tests/**/*_test.py",
+]
+
 [tool.mypy]
 python_version = "3.14"
 follow_imports = "normal"
 files = [
   "clouddrift/**/*.py",
   "tests/**/*.py",
-]
-
-[tool.pytest.ini_options]
-testpaths = [
-  "tests/**/*_test.py",
 ]
 
 [[tool.mypy.overrides]]
@@ -94,3 +94,10 @@ module = [
   "tests.plotting_test",
 ]
 ignore_errors = true
+
+[build-system]
+requires = ["uv_build<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""
